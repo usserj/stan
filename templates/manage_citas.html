@@ -1,0 +1,64 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Gestión de Citas</h1>
+    <a href="{{ url_for('create_cita') }}" class="btn btn-primary mb-3">Añadir Cita</a>
+    
+    <!-- Formulario de Búsqueda -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <form method="GET" action="{{ url_for('manage_citas') }}">
+                <div class="form-group">
+                    <label for="search_paciente">Buscar Paciente</label>
+                    <input type="text" class="form-control" id="search_paciente" name="search_paciente" value="{{ request.args.get('search_paciente', '') }}">
+                </div>
+                <div class="form-group">
+                    <label for="search_paciente_id">Buscar por ID del Paciente</label>
+                    <input type="text" class="form-control" id="search_paciente_id" name="search_paciente_id" value="{{ request.args.get('search_paciente_id', '') }}">
+                </div>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+        <div class="col-md-4 offset-md-4 text-right">
+            <a href="{{ url_for('download_excel', search_paciente=request.args.get('search_paciente', ''), search_paciente_id=request.args.get('search_paciente_id', '')) }}" class="btn btn-success">Descargar Excel</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Especialidad</th>
+                    <th>Medico</th>
+                    <th>Fecha y Hora</th>
+                    <th>Duración</th>
+                    <th>Estado</th>
+                    <th>Motivo de la Cita</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cita in citas %}
+                <tr>
+                    <td>{{ cita.paciente.Nombres }}</td>
+                    <td>{{ cita.especialidad.Nombre }}</td>
+                    <td>{{ cita.medico.Nombre }}</td>
+                    <td>{{ cita.FechaCita.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ cita.Duracion }} minutos</td>
+                    <td>{{ cita.Estado }}</td>
+                    <td>{{ cita.MotivoCita }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_cita', cita_id=cita.CitaID) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="{{ url_for('delete_cita', cita_id=cita.CitaID) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

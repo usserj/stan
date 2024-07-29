@@ -1,0 +1,45 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title text-center">Gestionar Médicos</h1>
+    <a href="{{ url_for('create_doctor') }}" class="btn btn-primary mb-3">Añadir Médico</a>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Correo Electrónico</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Ciudad Residencia</th>
+                    <th>Especialidad</th>
+                    <th>Estado Médico</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td>{{ doctor.Nombre }}</td>
+                    <td>{{ doctor.Apellidos }}</td>
+                    <td>{{ doctor.CorreoElectronico }}</td>
+                    <td>{{ doctor.Telefono }}</td>
+                    <td>{{ doctor.Direccion }}</td>
+                    <td>{{ doctor.CiudadResidencia }}</td>
+                    <td>{{ doctor.Especialidad }}</td>
+                    <td>{{ doctor.EstadoMedico }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_doctor', doctor_id=doctor.MedicoID) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="{{ url_for('delete_doctor', doctor_id=doctor.MedicoID) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Desactivar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

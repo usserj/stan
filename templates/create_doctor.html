@@ -1,0 +1,65 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="form-title text-center">Añadir Médico</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="numero_licencia">{{ form.numero_licencia.label }}</label>
+                    {{ form.numero_licencia(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="nombre">{{ form.nombre.label }}</label>
+                    {{ form.nombre(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="apellidos">{{ form.apellidos.label }}</label>
+                    {{ form.apellidos(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="correo_electronico">{{ form.correo_electronico.label }}</label>
+                    {{ form.correo_electronico(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="telefono">{{ form.telefono.label }}</label>
+                    {{ form.telefono(class="form-control") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="direccion">{{ form.direccion.label }}</label>
+                    {{ form.direccion(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="ciudad_residencia">{{ form.ciudad_residencia.label }}</label>
+                    {{ form.ciudad_residencia(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="fecha_nacimiento">{{ form.fecha_nacimiento.label }}</label>
+                    {{ form.fecha_nacimiento(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="genero">{{ form.genero.label }}</label>
+                    {{ form.genero(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="especialidad">{{ form.especialidad.label }}</label>
+                    {{ form.especialidad(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="fecha_contratacion">{{ form.fecha_contratacion.label }}</label>
+                    {{ form.fecha_contratacion(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="estado_medico">{{ form.estado_medico.label }}</label>
+                    {{ form.estado_medico(class="form-control") }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+    </form>
+</div>
+{% endblock %}

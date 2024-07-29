@@ -1,0 +1,43 @@
+{% extends "home.html" %}
+
+{% block title %}
+Editar Cita
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Cita</h1>
+    <form method="POST" action="{{ url_for('paciente_edit_cita', cita_id=cita.CitaID) }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="EspecialidadID">{{ form.EspecialidadID.label }}</label>
+            {{ form.EspecialidadID(class="form-control", id="EspecialidadID") }}
+        </div>
+        <div class="form-group">
+            <label for="MedicoID">{{ form.MedicoID.label }}</label>
+            {{ form.MedicoID(class="form-control", id="MedicoID") }}
+        </div>
+        <div class="form-group">
+            <label for="Fecha">{{ form.Fecha.label }}</label>
+            {{ form.Fecha(class="form-control", id="Fecha") }}
+        </div>
+        <div class="form-group">
+            <label for="Hora">{{ form.Hora.label }}</label>
+            {{ form.Hora(class="form-control", id="Hora") }}
+        </div>
+        <div class="form-group">
+            <label for="Duracion">{{ form.Duracion.label }}</label>
+            {{ form.Duracion(class="form-control", id="Duracion") }}
+        </div>
+        <div class="form-group">
+            <label for="Estado">{{ form.Estado.label }}</label>
+            {{ form.Estado(class="form-control", id="Estado") }}
+        </div>
+        <div class="form-group">
+            <label for="MotivoCita">{{ form.MotivoCita.label }}</label>
+            {{ form.MotivoCita(class="form-control", id="MotivoCita") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Cita</button>
+    </form>
+</div>
+{% endblock %}

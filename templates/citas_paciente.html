@@ -1,0 +1,36 @@
+{% extends "home.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Mis Citas</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Especialidad</th>
+                <th>Médico</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cita in citas %}
+            <tr>
+                <td>{{ cita.especialidad.Nombre }}</td>
+                <td>{{ cita.medico.Nombre }} {{ cita.medico.Apellidos }}</td>
+                <td>{{ cita.FechaCita.strftime('%Y-%m-%d') }}</td>
+                <td>{{ cita.FechaCita.strftime('%H:%M') }}</td>
+                <td>{{ cita.Estado }}</td>
+                <td>
+                    {% if cita.Estado != 'cancelada' %}
+                    <form method="POST" action="{{ url_for('cancelar_cita', cita_id=cita.CitaID) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

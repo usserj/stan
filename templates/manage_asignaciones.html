@@ -1,0 +1,25 @@
+{% extends "home.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Gestionar Asignaciones</h1>
+    <a href="{{ url_for('asignar_consultorio') }}" class="btn btn-success mb-2">Asignar Consultorio</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Consultorio</th>
+                <th>Doctor</th>
+                <th>Fecha de Asignación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asignacion in asignaciones %}
+            <tr>
+                <td>{{ asignacion.consultorio.nombre }}</td>
+                <td>{{ asignacion.doctor.Nombre }}</td>
+                <td>{{ asignacion.fecha_asignacion }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

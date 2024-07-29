@@ -1,0 +1,114 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">Crear Cita</h1>
+    <form method="POST" action="{{ url_for('create_cita') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="PacienteID">{{ form.PacienteID.label }}</label>
+            {{ form.PacienteID(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="EspecialidadID">{{ form.EspecialidadID.label }}</label>
+            {{ form.EspecialidadID(class="form-control", id="EspecialidadID") }}
+        </div>
+        <div class="form-group">
+            <label for="MedicoID">{{ form.MedicoID.label }}</label>
+            {{ form.MedicoID(class="form-control", id="MedicoID") }}
+        </div>
+        <div class="form-group">
+            <label for="Fecha">Fecha</label>
+            <input type="date" id="Fecha" class="form-control" name="Fecha" min="2024-01-01">
+        </div>
+        <div class="form-group">
+            <label for="Hora">Hora</label>
+            <select id="Hora" name="Hora" class="form-control">
+                <option value="">Selecciona una Hora</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Duracion">{{ form.Duracion.label }}</label>
+            {{ form.Duracion(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="Estado">{{ form.Estado.label }}</label>
+            {{ form.Estado(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="MotivoCita">{{ form.MotivoCita.label }}</label>
+            {{ form.MotivoCita(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+    </form>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#EspecialidadID').on('change', function() {
+            var especialidadID = $(this).val();
+            fetch('/get_medicos/' + especialidadID)
+                .then(response => response.json())
+                .then(data => {
+                    var medicoSelect = $('#MedicoID');
+                    medicoSelect.empty();
+                    medicoSelect.append(new Option('Selecciona un Médico', ''));
+                    data.forEach(function(medico) {
+                        medicoSelect.append(new Option(medico.Nombre, medico.MedicoID));
+                    });
+                });
+        });
+
+        $('#MedicoID, #Fecha').on('change', function() {
+            updateHorasDisponibles();
+        });
+
+        $('#Fecha').on('change', function() {
+            var selectedDate = new Date($(this).val());
+            var currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0); // Ajustar la hora para que solo compare la fecha
+            if (selectedDate < currentDate) {
+                alert('Por favor, seleccione una fecha futura.');
+                $(this).val(''); // Limpia el campo de fecha
+            } else {
+                updateHorasDisponibles();
+            }
+        });
+
+        function updateHorasDisponibles() {
+            var medicoID = $('#MedicoID').val();
+            var fecha = $('#Fecha').val();
+            if (medicoID && fecha) {
+                console.log("Solicitando horas para médico:", medicoID, "y fecha:", fecha);
+                fetch(`/get_horas_disponibles/${medicoID}/${fecha}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Horas recibidas:", data);
+                        var horaSelect = $('#Hora');
+                        horaSelect.empty();
+                        horaSelect.append(new Option('Selecciona una Hora', ''));
+                        if (data.length > 0) {
+                            data.forEach(function(hora) {
+                                horaSelect.append(new Option(hora, hora));
+                            });
+                        } else {
+                            console.log("No se recibieron horas disponibles");
+                            horaSelect.append(new Option('No hay horas disponibles', ''));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener horas:', error);
+                    });
+            } else {
+                console.log("Falta médico o fecha");
+            }
+        }
+    });
+</script>
+{% endblock %}
