@@ -31,10 +31,9 @@ class Usuario(db.Model, UserMixin):
     FechaRegistro = db.Column(db.DateTime, nullable=True, default=db.func.current_timestamp())
     UltimoAcceso = db.Column(db.DateTime, nullable=True)
     Estado = db.Column(db.String(10), nullable=False, default='activo')
-    RolID = db.Column(db.Integer, db.ForeignKey('Roles.RolID'), nullable=False)
-    EstadoPaciente = db.Column(db.String(10), nullable=False, default='activo')
     
-    rol = db.relationship('Rol', backref='usuarios')  # Establecer la relación con Rol
+    # Relación muchos a muchos con la tabla de roles
+    roles = db.relationship('Rol', secondary=user_roles, backref=db.backref('usuarios', lazy='dynamic'))
 
     def get_id(self):
         return self.UsuarioID
@@ -68,7 +67,7 @@ class Paciente(db.Model):
 class Medico(db.Model):
     __tablename__ = 'Medicos'
     MedicoID = db.Column(db.Integer, primary_key=True)
-    UsuarioID = db.Column(db.Integer, nullable=True)
+    UsuarioID = db.Column(db.Integer, db.ForeignKey('Usuarios.UsuarioID'), nullable=False)
     NumeroLicencia = db.Column(db.String(50), nullable=True)
     Nombre = db.Column(db.String(100), nullable=False)
     Apellidos = db.Column(db.String(100), nullable=False)
@@ -82,10 +81,7 @@ class Medico(db.Model):
     FechaContratacion = db.Column(db.Date, nullable=True)
     EstadoMedico = db.Column(db.String(10), nullable=False, default='activo')
 
-    # Relación con Horario
-    horarios = db.relationship('Horario', backref='medico', lazy=True)
-
-
+    usuario = db.relationship('Usuario', backref=db.backref('medico', uselist=False))
 
 
 class Especialidad(db.Model):
@@ -119,6 +115,8 @@ class Cita(db.Model):
     Duracion = db.Column(db.Integer, nullable=False, default=30)
     Estado = db.Column(db.String(20), nullable=False)
     MotivoCita = db.Column(db.String(500), nullable=False)
+    Diagnostico = db.Column(db.String(500))#se agrega dos nuevos campos para manejar el perfil de medico
+    Medicacion = db.Column(db.String(500))#se agrega dos nuevos campos para manejar el perfil de medico
     FechaRegistro = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     UsuarioRegistro = db.Column(db.Integer, nullable=False)
 

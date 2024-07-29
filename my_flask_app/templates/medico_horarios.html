@@ -1,0 +1,27 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Mis Horarios</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Día de la semana</th>
+                <th scope="col">Hora de inicio</th>
+                <th scope="col">Hora de fin</th>
+                <th scope="col">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horario in horarios %}
+                <tr>
+                    <td>{{ horario.day_of_week }}</td>
+                    <td>{{ horario.start_time }}</td>
+                    <td>{{ horario.end_time }}</td>
+                    <td>{{ horario.estado }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

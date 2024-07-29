@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil del Usuario</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">Mi Perfil</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Información Personal</h5>
+                <p class="card-text"><strong>Nombre de Usuario:</strong> {{ user.NombreUsuario }}</p>
+                <p class="card-text"><strong>Correo Electrónico:</strong> {{ user.CorreoElectronico }}</p>
+                <p class="card-text"><strong>Nombres:</strong> {{ user.Nombres }}</p>
+                <p class="card-text"><strong>Apellidos:</strong> {{ user.Apellidos }}</p>
+                <p class="card-text"><strong>Teléfono:</strong> {{ user.Telefono }}</p>
+                <p class="card-text"><strong>Dirección:</strong> {{ user.Direccion }}</p>
+                <p class="card-text"><strong>Ciudad de Residencia:</strong> {{ user.CiudadResidencia }}</p>
+                <p class="card-text"><strong>Fecha de Nacimiento:</strong> {{ user.FechaNacimiento }}</p>
+                <p class="card-text"><strong>Género:</strong> {{ user.Genero }}</p>
+                <p class="card-text"><strong>Grupo Sanguíneo:</strong> {{ user.GrupoSanguineo }}</p>
+                
+                <h5 class="card-title">Roles</h5>
+                <ul class="list-group">
+                    {% for role in roles %}
+                        <li class="list-group-item">{{ role }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

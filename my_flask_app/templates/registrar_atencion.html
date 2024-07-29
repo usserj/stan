@@ -1,0 +1,22 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Registrar Atención al Paciente</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="paciente">Paciente</label>
+            <input type="text" class="form-control" id="paciente" value="{{ cita.paciente.Nombres }} {{ cita.paciente.Apellidos }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="diagnostico">Diagnóstico</label>
+            <textarea class="form-control" id="diagnostico" name="diagnostico" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="medicacion">Medicación</label>
+            <textarea class="form-control" id="medicacion" name="medicacion" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+</div>
+{% endblock %}

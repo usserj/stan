@@ -62,20 +62,22 @@ class PacienteForm(FlaskForm):
     submit = SubmitField('Guardar')
 
 class MedicoForm(FlaskForm):
-    numero_licencia = StringField('Numero Licencia', validators=[DataRequired()])
-    nombre = StringField('Nombre', validators=[DataRequired()])
-    apellidos = StringField('Apellidos', validators=[DataRequired()])
-    correo_electronico = StringField('Correo Electronico', validators=[DataRequired(), Email()])
-    telefono = StringField('Telefono')
-    direccion = StringField('Direccion')
-    ciudad_residencia = SelectField('Ciudad de Residencia', validators=[DataRequired()])
-    fecha_nacimiento = DateField('Fecha Nacimiento', format='%Y-%m-%d')
-    genero = SelectField('Genero', choices=[], validators=[DataRequired()])
-    especialidad = SelectField('Especialidad', choices=[], validators=[DataRequired()])
-    fecha_contratacion = DateField('Fecha Contratacion', format='%Y-%m-%d')
-    estado_medico = SelectField('Estado Medico', choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')])  # Nuevo campo
+    numero_licencia = StringField('Número de Licencia', validators=[Length(max=50)])
+    nombre = StringField('Nombre', validators=[DataRequired(), Length(max=100)])
+    apellidos = StringField('Apellidos', validators=[DataRequired(), Length(max=100)])
+    correo_electronico = StringField('Correo Electrónico', validators=[DataRequired(), Email(), Length(max=100)])
+    telefono = StringField('Teléfono', validators=[Length(max=15)])
+    direccion = StringField('Dirección', validators=[Length(max=255)])
+    ciudad_residencia = SelectField('Ciudad de Residencia')
+    fecha_nacimiento = DateField('Fecha de Nacimiento', format='%Y-%m-%d')
+    genero = SelectField('Género', choices=[('M', 'Masculino'), ('F', 'Femenino')])
+    especialidad = SelectField('Especialidad', validators=[DataRequired()])
+    fecha_contratacion = DateField('Fecha de Contratación', format='%Y-%m-%d')
+    estado_medico = StringField('Estado Médico', validators=[Length(max=10)], default='activo')
+    nombre_usuario = StringField('Nombre de Usuario', validators=[DataRequired(), Length(max=50)])
+    password = PasswordField('Contraseña', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirmar Contraseña', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Guardar')
-
 
 class EspecialidadForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired(), Length(max=100)])

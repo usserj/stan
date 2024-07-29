@@ -3,11 +3,13 @@ from forms import RegistrationForm, LoginForm, PacienteForm,MedicoForm,Especiali
 from models import db,Rol,user_roles, Usuario, Paciente, bcrypt, login_manager, Medico,Especialidad,Horario,Cita,MedicoEspecialidad,Catalogo,Consultorio, ConsultorioDoctor
 from flask_login import login_user, current_user, logout_user, login_required
 import urllib.parse
-from datetime import datetime, timedelta,timezone, time  # Importa datetime y timedelta
+from datetime import datetime, timedelta,timezone, time, date  # Importa datetime y timedelta
 from utils import export_to_excel
 import tempfile
 from decorators import role_required 
 from flask import g
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 app = Flask(__name__)
@@ -22,17 +24,18 @@ bcrypt.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
-        g.role = current_user.rol.NombreRol
+        g.roles = [role.NombreRol for role in current_user.roles]
+        print(f"Roles for {current_user.NombreUsuario}: {g.roles}")  # Agregar esta línea
     else:
-        g.role = None
+        g.roles = []
+        print("No user is authenticated.")  # Agregar esta línea
 
 @app.context_processor
 def inject_roles():
-    return dict(role=g.role)
+    return dict(roles=g.roles)
 
 
 @login_manager.user_loader
@@ -47,8 +50,8 @@ def index():
 @app.route('/home')
 @login_required
 def home_page():
-    return render_template('home.html', title='Inicio', role=g.role)
-
+    print(f"Rendering home with roles: {g.roles}")  # Agregar esta línea
+    return render_template('home.html', title='Inicio', roles=g.roles)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -236,27 +239,61 @@ def create_doctor():
     form.ciudad_residencia.choices = [(c.id, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
     form.genero.choices = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='genero').all()]
     form.especialidad.choices = [(e.EspecialidadID, e.Nombre) for e in Especialidad.query.all()]
+
     if form.validate_on_submit():
-        doctor = Medico(
-            UsuarioID=current_user.UsuarioID,
-            NumeroLicencia=form.numero_licencia.data,
-            Nombre=form.nombre.data,
-            Apellidos=form.apellidos.data,
-            CorreoElectronico=form.correo_electronico.data,
-            Telefono=form.telefono.data,
-            Direccion=form.direccion.data,
-            CiudadResidencia=form.ciudad_residencia.data,
-            FechaNacimiento=form.fecha_nacimiento.data,
-            Genero=form.genero.data,
-            Especialidad=form.especialidad.data,
-            FechaContratacion=form.fecha_contratacion.data,
-            EstadoMedico='activo'
-        )
-        db.session.add(doctor)
-        db.session.commit()
-        flash('El médico ha sido añadido exitosamente!', 'success')
-        return redirect(url_for('manage_doctors'))
+        try:
+            # Crear el usuario con campos predeterminados
+            usuario = Usuario(
+                NombreUsuario=form.nombre_usuario.data,
+                Contrasena=generate_password_hash(form.password.data).decode('utf-8'),
+                Identificacion=form.numero_licencia.data,  # O cualquier identificación única
+                Apellidos=form.apellidos.data,
+                Nombres=form.nombre.data,
+                CorreoElectronico=form.correo_electronico.data,
+                Telefono=form.telefono.data,
+                Direccion=form.direccion.data,
+                CiudadResidencia=form.ciudad_residencia.data,
+                FechaNacimiento=form.fecha_nacimiento.data,
+                Genero=form.genero.data,
+                Estado='activo'
+            )
+            db.session.add(usuario)
+            db.session.commit()
+
+            # Crear el médico
+            doctor = Medico(
+                UsuarioID=usuario.UsuarioID,
+                NumeroLicencia=form.numero_licencia.data,
+                Nombre=form.nombre.data,
+                Apellidos=form.apellidos.data,
+                CorreoElectronico=form.correo_electronico.data,
+                Telefono=form.telefono.data,
+                Direccion=form.direccion.data,
+                CiudadResidencia=form.ciudad_residencia.data,
+                FechaNacimiento=form.fecha_nacimiento.data,
+                Genero=form.genero.data,
+                Especialidad=form.especialidad.data,
+                FechaContratacion=form.fecha_contratacion.data,
+                EstadoMedico='activo'
+            )
+            db.session.add(doctor)
+            db.session.commit()
+
+            # Asignar rol al usuario
+            rol_medico = Rol.query.filter_by(NombreRol='Medico').first()
+            if rol_medico:
+                usuario.roles.append(rol_medico)
+                db.session.commit()
+
+            flash('El médico ha sido añadido exitosamente!', 'success')
+            return redirect(url_for('manage_doctors'))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al crear el médico: {e}', 'danger')
+
     return render_template('create_doctor.html', title='Añadir Médico', form=form)
+
 
 @app.route("/doctors/<int:doctor_id>/edit", methods=['GET', 'POST'])
 @login_required
@@ -1004,6 +1041,18 @@ def paciente_cancelar_cita(cita_id):
     flash('Cita cancelada exitosamente!', 'success')
     return redirect(url_for('paciente_citas'))
 
+
+
+
+#Perfil de medico
+
+# Rutas para el perfil del médico
+
+@app.route("/perfil_medico", methods=['GET'])
+@login_required
+def perfil_medico():
+    user = Usuario.query.get(current_user.UsuarioID)
+    return render_template('perfil_medico.html', user=user, roles=g.roles)
 
 
 if __name__ == '__main__':
