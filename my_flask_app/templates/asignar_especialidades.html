@@ -1,0 +1,19 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">Asignar Especialidades a Médico</h1>
+    <form method="POST" action="{{ url_for('asignar_especialidades') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="MedicoID">{{ form.MedicoID.label }}</label>
+            {{ form.MedicoID(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="EspecialidadID">{{ form.EspecialidadID.label }}</label>
+            {{ form.EspecialidadID(class="form-control", multiple=True) }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Asignar Especialidades</button>
+    </form>
+</div>
+{% endblock %}

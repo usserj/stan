@@ -1,0 +1,40 @@
+{% extends "home.html" %}
+
+{% block title %}
+Mis Citas
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Mis Citas</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Especialidad</th>
+                <th>Médico</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cita in citas %}
+            <tr>
+                <td>{{ cita.FechaCita.strftime('%Y-%m-%d') }}</td>
+                <td>{{ cita.FechaCita.strftime('%H:%M') }}</td>
+                <td>{{ cita.especialidad.Nombre }}</td>
+                <td>{{ cita.medico.Nombre }} {{ cita.medico.Apellidos }}</td>
+                <td>{{ cita.Estado }}</td>
+                <td>
+                    <a href="{{ url_for('paciente_edit_cita', cita_id=cita.CitaID) }}" class="btn btn-primary btn-sm">Editar</a>
+                    <form action="{{ url_for('paciente_cancelar_cita', cita_id=cita.CitaID) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

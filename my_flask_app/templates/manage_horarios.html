@@ -1,0 +1,44 @@
+<!-- templates/manage_horarios.html -->
+{% extends "home.html" %}
+
+{% block content %}
+</div>
+    <div id="page-content-wrapper">
+        <div class="container">
+            <h1 class="form-title text-center">Gestión de Horarios</h1>
+            <a href="{{ url_for('create_horario') }}" class="btn btn-primary mb-3">Añadir Horario</a>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Médico</th>
+                            <th>Día de la Semana</th>
+                            <th>Hora de Inicio</th>
+                            <th>Hora de Fin</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for horario in horarios %}
+                        <tr>
+                            <td>{{ horario.medico.Nombre }} {{ horario.medico.Apellidos }}</td>
+                            <td>{{ horario.day_of_week }}</td>
+                            <td>{{ horario.start_time }}</td>
+                            <td>{{ horario.end_time }}</td>
+                            <td>{{ horario.estado }}</td>
+                            <td>
+                                <a href="{{ url_for('edit_horario', horario_id=horario.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ url_for('delete_horario', horario_id=horario.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Desactivar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

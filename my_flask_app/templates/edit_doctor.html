@@ -1,0 +1,65 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">Editar Médico</h1>
+    <form method="POST" action="{{ url_for('edit_doctor', doctor_id=doctor.MedicoID) }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="numero_licencia">{{ form.numero_licencia.label }}</label>
+                    {{ form.numero_licencia(class="form-control", id="numero_licencia", value=doctor.NumeroLicencia) }}
+                </div>
+                <div class="form-group">
+                    <label for="nombre">{{ form.nombre.label }}</label>
+                    {{ form.nombre(class="form-control", id="nombre", value=doctor.Nombre) }}
+                </div>
+                <div class="form-group">
+                    <label for="apellidos">{{ form.apellidos.label }}</label>
+                    {{ form.apellidos(class="form-control", id="apellidos", value=doctor.Apellidos) }}
+                </div>
+                <div class="form-group">
+                    <label for="correo_electronico">{{ form.correo_electronico.label }}</label>
+                    {{ form.correo_electronico(class="form-control", id="correo_electronico", value=doctor.CorreoElectronico) }}
+                </div>
+                <div class="form-group">
+                    <label for="telefono">{{ form.telefono.label }}</label>
+                    {{ form.telefono(class="form-control", id="telefono", value=doctor.Telefono) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="direccion">{{ form.direccion.label }}</label>
+                    {{ form.direccion(class="form-control", id="direccion", value=doctor.Direccion) }}
+                </div>
+                <div class="form-group">
+                    <label for="ciudad_residencia">{{ form.ciudad_residencia.label }}</label>
+                    {{ form.ciudad_residencia(class="form-control", id="ciudad_residencia", value=doctor.CiudadResidencia) }}
+                </div>
+                <div class="form-group">
+                    <label for="fecha_nacimiento">{{ form.fecha_nacimiento.label }}</label>
+                    {{ form.fecha_nacimiento(class="form-control", id="fecha_nacimiento", value=doctor.FechaNacimiento) }}
+                </div>
+                <div class="form-group">
+                    <label for="genero">{{ form.genero.label }}</label>
+                    {{ form.genero(class="form-control", id="genero", value=doctor.Genero) }}
+                </div>
+                <div class="form-group">
+                    <label for="especialidad">{{ form.especialidad.label }}</label>
+                    {{ form.especialidad(class="form-control", id="especialidad", value=doctor.Especialidad) }}
+                </div>
+                <div class="form-group">
+                    <label for="fecha_contratacion">{{ form.fecha_contratacion.label }}</label>
+                    {{ form.fecha_contratacion(class="form-control", id="fecha_contratacion", value=doctor.FechaContratacion) }}
+                </div>
+                <div class="form-group">
+                    <label for="estado_medico">{{ form.estado_medico.label }}</label>
+                    {{ form.estado_medico(class="form-control", id="estado_medico", value=doctor.EstadoMedico) }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">{{ form.submit() }}</button>
+    </form>
+</div>
+{% endblock %}

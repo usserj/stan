@@ -1,0 +1,65 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">Mi Perfil</h1>
+    <form method="POST" action="{{ url_for('perfil_paciente') }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="identificacion">{{ form.identificacion.label }}</label>
+                    {{ form.identificacion(class="form-control", id="identificacion") }}
+                </div>
+                <div class="form-group">
+                    <label for="apellidos">{{ form.apellidos.label }}</label>
+                    {{ form.apellidos(class="form-control", id="apellidos") }}
+                </div>
+                <div class="form-group">
+                    <label for="nombres">{{ form.nombres.label }}</label>
+                    {{ form.nombres(class="form-control", id="nombres") }}
+                </div>
+                <div class="form-group">
+                    <label for="correo_electronico">{{ form.correo_electronico.label }}</label>
+                    {{ form.correo_electronico(class="form-control", id="correo_electronico") }}
+                </div>
+                <div class="form-group">
+                    <label for="telefono">{{ form.telefono.label }}</label>
+                    {{ form.telefono(class="form-control", id="telefono") }}
+                </div>
+                <div class="form-group">
+                    <label for="direccion">{{ form.direccion.label }}</label>
+                    {{ form.direccion(class="form-control", id="direccion") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ciudad_residencia">{{ form.ciudad_residencia.label }}</label>
+                    {{ form.ciudad_residencia(class="form-control", id="ciudad_residencia") }}
+                </div>
+                <div class="form-group">
+                    <label for="fecha_nacimiento">{{ form.fecha_nacimiento.label }}</label>
+                    {{ form.fecha_nacimiento(class="form-control", id="fecha_nacimiento") }}
+                </div>
+                <div class="form-group">
+                    <label for="genero">{{ form.genero.label }}</label>
+                    {{ form.genero(class="form-control", id="genero") }}
+                </div>
+                <div class="form-group">
+                    <label for="grupo_sanguineo">{{ form.grupo_sanguineo.label }}</label>
+                    {{ form.grupo_sanguineo(class="form-control", id="grupo_sanguineo") }}
+                </div>
+                <div class="form-group">
+                    <label for="password">{{ form.password.label }}</label>
+                    {{ form.password(class="form-control", id="password") }}
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">{{ form.confirm_password.label }}</label>
+                    {{ form.confirm_password(class="form-control", id="confirm_password") }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">Crear Especialidad</h1>
+    <form method="POST" action="{{ url_for('create_specialty') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="nombre">{{ form.nombre.label }}</label>
+            {{ form.nombre(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="descripcion">{{ form.descripcion.label }}</label>
+            {{ form.descripcion(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="estado">{{ form.estado.label }}</label>
+            {{ form.estado(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+    </form>
+</div>
+{% endblock %}

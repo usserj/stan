@@ -1,0 +1,191 @@
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --success-color: #28a745;
+    --success-hover: #218838;
+    --white: #fff;
+    --light-bg: rgba(255, 255, 255, 0.9);
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+  /* Base styles */
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/login.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+  /* Container styles tabla tamaños */
+.container {
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    max-width: 1080px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.login-container {
+    max-width: 400px;
+}
+
+.register-container {
+    padding: 30px;
+    margin-top: 10px;
+}
+
+.form-container {
+    margin: 0 auto;
+}
+
+  /* Form styles */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+  /* Button styles */
+.btn-primary {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--success-hover);
+    border-color: var(--success-hover);
+}
+
+.btn-link {
+    color: var(--primary-color);
+}
+
+.btn-link:hover {
+    color: var(--primary-hover);
+    text-decoration: none;
+}
+
+  /* Text styles */
+.text-center {
+    margin-top: 10px;
+    color: var(--white);
+}
+
+  /* Layout styles */
+#wrapper {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+}
+
+#sidebar-wrapper {
+    min-height: 200vh;
+    width: 150px;
+    background-color: var(--primary-color);
+}
+
+#page-content-wrapper {
+    width: calc(100% - 170px);
+    padding: 1px;
+}
+
+  /* Table styles */
+.table {
+    background-color: var(--light-bg);
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 1px;
+}
+
+.table thead th {
+    background-color: var(--primary-color);
+    color: var(--white);
+    
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+  /* Misc styles */
+.list-group-item {
+    border: none;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+  /* Hover effects */
+.login-container:hover,
+.register-container:hover,
+.form-container:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+  /* Media queries for responsiveness */
+@media (max-width: 768px) {
+    #wrapper {
+flex-direction: column;
+    }
+
+    #sidebar-wrapper,
+    #page-content-wrapper {
+width: 100%;
+    }
+
+    .form-column {
+min-width: 100%;
+    }
+}
+
+.alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 300px;
+}

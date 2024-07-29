@@ -1,0 +1,37 @@
+{% extends "home.html" %}
+
+{% block content %}
+</div>
+    <div id="page-content-wrapper">
+        <div class="container">
+            <h1 class="form-title text-center">Gestionar Especialidades</h1>
+            <a href="{{ url_for('create_specialty') }}" class="btn btn-primary mb-3">Añadir Especialidad</a>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for specialty in specialties %}
+                        <tr>
+                            <td>{{ specialty.Nombre }}</td>
+                            <td>{{ specialty.Descripcion }}</td>
+                            <td>
+                                <a href="{{ url_for('edit_specialty', specialty_id=specialty.EspecialidadID) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ url_for('delete_specialty', specialty_id=specialty.EspecialidadID) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Desactivar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

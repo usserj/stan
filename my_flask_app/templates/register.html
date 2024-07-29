@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="register-container">
+        <div class="form-title text-center">Register</div>
+        <form method="POST" action="{{ url_for('register') }}">
+            {{ form.hidden_tag() }}
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="identificacion">{{ form.identificacion.label }}</label>
+                        {{ form.identificacion(class="form-control", id="identificacion") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">{{ form.apellidos.label }}</label>
+                        {{ form.apellidos(class="form-control", id="apellidos") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="nombres">{{ form.nombres.label }}</label>
+                        {{ form.nombres(class="form-control", id="nombres") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="email">{{ form.email.label }}</label>
+                        {{ form.email(class="form-control", id="email") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">{{ form.telefono.label }}</label>
+                        {{ form.telefono(class="form-control", id="telefono") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">{{ form.direccion.label }}</label>
+                        {{ form.direccion(class="form-control", id="direccion") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="ciudad_residencia">{{ form.ciudad_residencia.label }}</label>
+                        {{ form.ciudad_residencia(class="form-control", id="ciudad_residencia") }}
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="fecha_nacimiento">{{ form.fecha_nacimiento.label }}</label>
+                        {{ form.fecha_nacimiento(class="form-control", id="fecha_nacimiento") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="genero">{{ form.genero.label }}</label>
+                        {{ form.genero(class="form-control", id="genero") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="grupo_sanguineo">{{ form.grupo_sanguineo.label }}</label>
+                        {{ form.grupo_sanguineo(class="form-control", id="grupo_sanguineo") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="username">{{ form.username.label }}</label>
+                        {{ form.username(class="form-control", id="username") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="password">{{ form.password.label }}</label>
+                        {{ form.password(class="form-control", id="password") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">{{ form.confirm_password.label }}</label>
+                        {{ form.confirm_password(class="form-control", id="confirm_password") }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">{{ form.submit() }}</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.amazonaws.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
