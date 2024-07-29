@@ -1372,6 +1372,9 @@ def historial_medico():
             paciente = Usuario.query.filter_by(Identificacion=cedula).first()
             if paciente:
                 citas = Cita.query.filter_by(UsuarioID=paciente.UsuarioID).all()
+                for cita in citas:
+                    cita.diagnosticos = Diagnostico.query.filter_by(CitaID=cita.CitaID).all()
+                    cita.examenes = Examen.query.filter_by(CitaID=cita.CitaID).all()
             else:
                 flash('Paciente no encontrado.', 'error')
         

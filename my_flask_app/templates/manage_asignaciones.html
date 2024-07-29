@@ -1,7 +1,9 @@
+<!-- manage_asignaciones.html -->
 {% extends "home.html" %}
 {% block content %}
 <div class="container mt-4">
     <h1 class="text-center">Gestionar Asignaciones</h1>
+    <a href="{{ url_for('asignar_consultorio') }}" class="btn btn-primary mb-3">Asignar Consultorio</a>
     <table class="table table-striped">
         <thead>
             <tr>

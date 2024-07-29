@@ -41,8 +41,8 @@
                     <td>{{ cita.MotivoCita }}</td>
                     <td>{{ cita.Estado }}</td>
                     <td>
-                        {% for diag in cita.diagnosticos %}
-                        {{ diag.Descripcion }}<br>
+                        {% for diagnostico in cita.diagnosticos %}
+                        <li>{{ diagnostico.Descripcion }}</li>
                         {% endfor %}
                     </td>
                     <td>
