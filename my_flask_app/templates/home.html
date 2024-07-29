@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading">Administración Hospital</div>
             <div class="list-group list-group-flush">
@@ -17,19 +18,20 @@
                         {% if role == 'Administrador' %}
                             <a href="{{ url_for('manage_patients') }}" class="list-group-item list-group-item-action bg-light">Pacientes</a>
                             <a href="{{ url_for('manage_doctors') }}" class="list-group-item list-group-item-action bg-light">Médicos</a>
-                            <a href="{{ url_for('manage_specialties') }}" class="list-group-item list-group-item-action bg-light">Especialidades</a>
-                            <a href="{{ url_for('manage_horarios') }}" class="list-group-item list-group-item-action bg-light">Horarios</a>
                             <a href="{{ url_for('manage_citas') }}" class="list-group-item list-group-item-action bg-light">Citas</a>
-                            <a href="{{ url_for('asignar_especialidades') }}" class="list-group-item list-group-item-action bg-light">Asignar Especialidades</a>
                             <a href="{{ url_for('manage_consultorios') }}" class="list-group-item list-group-item-action bg-light">Consultorios</a>
                             <a href="{{ url_for('manage_asignaciones') }}" class="list-group-item list-group-item-action bg-light">Asignaciones</a>
                             <a href="{{ url_for('reporte_consultorios') }}" class="list-group-item list-group-item-action bg-light">Reporte de Consultorios</a>
+                            <a href="{{ url_for('usuario_listar') }}" class="list-group-item list-group-item-action bg-light">Gestión de Usuarios</a>
+                            <a href="{{ url_for('rol_gestionar') }}" class="list-group-item list-group-item-action bg-light">Gestión de Roles</a>
                         {% elif role == 'Paciente' %}
                             <a href="{{ url_for('perfil_paciente') }}" class="list-group-item list-group-item-action bg-light">Mi Perfil</a>
                             <a href="{{ url_for('paciente_citas') }}" class="list-group-item list-group-item-action bg-light">Mis Citas</a>
                             <a href="{{ url_for('paciente_crear_cita') }}" class="list-group-item list-group-item-action bg-light">Nueva Cita</a>
                         {% elif role == 'Medico' %}
                             <a href="{{ url_for('perfil_medico') }}" class="list-group-item list-group-item-action bg-light">Mi Perfil</a>
+                            <a href="{{ url_for('medico_agenda') }}" class="list-group-item list-group-item-action bg-light">Mi Agenda</a>
+                            <a href="{{ url_for('historial_medico', paciente_id=current_user.UsuarioID) }}" class="list-group-item list-group-item-action bg-light">Historial Médico</a>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
@@ -37,6 +39,7 @@
             </div>
         </div>
 
+        <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 {% with messages = get_flashed_messages(with_categories=true) %}

@@ -1,0 +1,26 @@
+{% extends "home.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Modificar Rol</h1>
+    <form method="POST" action="{{ url_for('modificar_rol', usuario_id=user_role.UsuarioID, rol_id=user_role.RolID) }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="usuario">Usuario</label>
+            <input type="text" class="form-control" id="usuario" value="{{ user_role.usuario.Nombres }} {{ user_role.usuario.Apellidos }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="rol">Rol Actual</label>
+            <input type="text" class="form-control" id="rol" value="{{ user_role.rol.NombreRol }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="nuevo_rol">Nuevo Rol</label>
+            <select class="form-control" id="nuevo_rol" name="rol_id">
+                {% for rol in roles %}
+                    <option value="{{ rol.RolID }}">{{ rol.NombreRol }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Rol</button>
+    </form>
+</div>
+{% endblock %}

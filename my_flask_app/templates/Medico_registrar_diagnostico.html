@@ -1,0 +1,49 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">{{ title }}</h1>
+    
+    <form method="POST" action="{{ url_for('registrar_diagnostico', cita_id=cita.CitaID) }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="diagnostico">{{ form.diagnostico.label }}</label>
+            {{ form.diagnostico(class="form-control", id="diagnostico") }}
+        </div>
+        <div class="form-group">
+            <label for="receta">{{ form.receta.label }}</label>
+            {{ form.receta(class="form-control", id="receta") }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Registrar Diagnóstico</button>
+    </form>
+
+    <hr>
+
+    <h2 class="text-center mt-4">Diagnósticos Registrados</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Diagnóstico</th>
+                    <th>Receta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for diag in diagnosticos %}
+                <tr>
+                    <td>{{ diag.Descripcion }}</td>
+                    <td>{{ diag.Receta }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_diagnostico', diagnostico_id=diag.DiagnosticoID) }}" class="btn btn-warning btn-sm">Modificar</a>
+                        <form action="{{ url_for('eliminar_diagnostico', diagnostico_id=diag.DiagnosticoID) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

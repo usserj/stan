@@ -1,0 +1,41 @@
+{% extends "home.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Usuarios</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre de Usuario</th>
+                <th>Email</th>
+                <th>Estado</th>
+                <th>Rol</th> <!-- Nueva columna para roles -->
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.UsuarioID }}</td>
+                <td>{{ user.NombreUsuario }}</td>
+                <td>{{ user.CorreoElectronico }}</td>
+                <td>{{ user.Estado }}</td>
+                <td>
+                    {% for role in user.roles %}
+                        {{ role.NombreRol }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </td> <!-- Mostrar los roles del usuario -->
+                <td>
+                    <a href="{{ url_for('usuario_editar', user_id=user.UsuarioID) }}" class="btn btn-primary btn-sm">Editar</a>
+                    {% if user.Estado != 'inactivo' %}
+                    <form action="{{ url_for('usuario_eliminar', user_id=user.UsuarioID) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-warning btn-sm">Inactivar</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

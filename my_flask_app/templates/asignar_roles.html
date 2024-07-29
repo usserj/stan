@@ -1,0 +1,37 @@
+{% extends "home.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Asignar Roles</h1>
+    <form method="GET" action="{{ url_for('asignar_roles') }}">
+        <div class="form-group">
+            <label for="search_query">Buscar Usuario (por Número de Identificación)</label>
+            <input type="text" name="search_query" id="search_query" class="form-control" value="{{ search_query }}" placeholder="Ingrese número de identificación">
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+
+    {% if users %}
+    <form method="POST" action="{{ url_for('asignar_roles') }}">
+        <div class="form-group mt-3">
+            <label for="usuario_id">Usuario</label>
+            <select name="usuario_id" class="form-control" id="usuario_id">
+                {% for user in users %}
+                <option value="{{ user.UsuarioID }}">{{ user.Identificacion }} - {{ user.Nombres }} {{ user.Apellidos }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="rol_id">Rol</label>
+            <select name="rol_id" class="form-control" id="rol_id">
+                {% for rol in roles %}
+                <option value="{{ rol.RolID }}">{{ rol.NombreRol }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Asignar Rol</button>
+    </form>
+    {% else %}
+    <p class="mt-3">No se encontraron usuarios con el número de identificación proporcionado.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -4,6 +4,11 @@
 <div class="container">
     <h1 class="title text-center">Gestionar Médicos</h1>
     <a href="{{ url_for('create_doctor') }}" class="btn btn-primary mb-3">Añadir Médico</a>
+    <a href="{{ url_for('manage_horarios') }}" class="btn btn-primary mb-3">Gestión de Horarios</a>
+    <a href="{{ url_for('manage_specialties') }}" class="btn btn-primary mb-3">Gestión de Especialidades</a>
+    
+    
+    
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>

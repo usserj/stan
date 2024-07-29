@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container mt-4">
     <h1 class="text-center">Gestionar Consultorios</h1>
-    <a href="{{ url_for('create_consultorio') }}" class="btn btn-success mb-2">Añadir Consultorio</a>
+    <a href="{{ url_for('create_consultorio') }}" class="btn btn-primary mb-3">Añadir Consultorio</a>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -11,7 +11,6 @@
                 <th>Descripción</th>
                 <th>Ubicación</th>
                 <th>Estado</th>
-                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -22,10 +21,6 @@
                 <td>{{ consultorio.descripcion }}</td>
                 <td>{{ consultorio.ubicacion }}</td>
                 <td>{{ consultorio.estado }}</td>
-                <td>
-                    <a href="#" class="btn btn-warning">Editar</a>
-                    <a href="#" class="btn btn-danger">Eliminar</a>
-                </td>
             </tr>
             {% endfor %}
         </tbody>

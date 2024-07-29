@@ -1,0 +1,60 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Historial Médico</h1>
+    <form method="POST" action="{{ url_for('historial_medico') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.cedula.label }}
+            {{ form.cedula(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    
+    {% if paciente %}
+    <h2 class="mt-4">Información básica del paciente:</h2>
+    <ul>
+        <li>Nombre completo: {{ paciente.Nombres }} {{ paciente.Apellidos }}</li>
+        <li>Fecha de nacimiento: {{ paciente.FechaNacimiento }}</li>
+        <li>Número de identificación: {{ paciente.Identificacion }}</li>
+        <li>Género: {{ paciente.Genero }}</li>
+        <li>Grupo sanguíneo: {{ paciente.GrupoSanguineo }}</li>
+    </ul>
+    
+    <h2 class="mt-4">Historial médico</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Fecha y Hora</th>
+                    <th>Motivo de la Cita</th>
+                    <th>Estado</th>
+                    <th>Diagnósticos</th>
+                    <th>Exámenes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cita in citas %}
+                <tr>
+                    <td>{{ cita.FechaCita }}</td>
+                    <td>{{ cita.MotivoCita }}</td>
+                    <td>{{ cita.Estado }}</td>
+                    <td>
+                        {% for diag in cita.diagnosticos %}
+                        {{ diag.Descripcion }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for examen in cita.examenes %}
+                        {{ examen.Tipo }}: {{ examen.Estado }}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

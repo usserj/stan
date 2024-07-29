@@ -1,0 +1,26 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Historial Médico</h1>
+    <h3>Paciente: {{ paciente.Nombres }} {{ paciente.Apellidos }}</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Diagnóstico</th>
+                <th>Receta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in historial %}
+            <tr>
+                <td>{{ registro.fecha }}</td>
+                <td>{{ registro.diagnostico }}</td>
+                <td>{{ registro.receta }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

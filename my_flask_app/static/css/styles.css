@@ -6,11 +6,24 @@
     --white: #fff;
     --light-bg: rgba(255, 255, 255, 0.9);
     --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --font-family: 'Arial, sans-serif';
+    --font-size-base: 16px; /* Tamaño base de la fuente */
+    --font-size-lg: 1.25rem; /* Tamaño grande de la fuente */
+    --font-size-sm: 0.875rem; /* Tamaño pequeño de la fuente */
+    --border-radius: 0.5rem; /* Radio de borde */
+    --padding-base: 1rem; /* Espaciado base */
+    --padding-lg: 1.5rem; /* Espaciado grande */
+    --padding-sm: 0.5rem; /* Espaciado pequeño */
 }
+
+
+
+
 
   /* Base styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
     background: url('../images/login.jpg') no-repeat center center fixed;
     background-size: cover;
     display: flex;
@@ -32,24 +45,33 @@ body::before {
     z-index: -1;
 }
 
-  /* Container styles tabla tamaños */
+  /* Container styles */
 .container {
     background-color: var(--light-bg);
-    padding: 20px;
-    border-radius: 8px;
+    padding: var(--padding-base);
+    border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     max-width: 1080px;
     width: 100%;
-    margin: 20px auto;
+    margin: var(--padding-base) auto;
 }
+
+.title {
+    color: var(--title-color);  /* Usar la variable de color del título */
+    font-size: 2rem;  /* Ajustar el tamaño de la fuente */
+    text-align: center;  /* Alinear el texto al centro */
+    margin-bottom: 1rem;  /* Espaciado inferior */
+}
+
+
 
 .login-container {
     max-width: 400px;
 }
 
 .register-container {
-    padding: 30px;
-    margin-top: 10px;
+    padding: var(--padding-lg);
+    margin-top: var(--padding-sm);
 }
 
 .form-container {
@@ -60,7 +82,7 @@ body::before {
 .form-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: var(--padding-base);
 }
 
 .form-column {
@@ -69,13 +91,13 @@ body::before {
 }
 
 .form-group {
-    margin-bottom: 10px;
+    margin-bottom: var(--padding-sm);
 }
 
 .form-title {
-    font-size: 1.5rem;
+    font-size: var(--font-size-lg);
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: var(--padding-base);
 }
 
   /* Button styles */
@@ -99,10 +121,12 @@ body::before {
 }
 
   /* Text styles */
+/* Text styles */
 .text-center {
-    margin-top: 10px;
-    color: var(--white);
+    margin-top: var(--padding-sm);
+    color: #2c3e50;  /* negro formal */
 }
+
 
   /* Layout styles */
 #wrapper {
@@ -112,14 +136,15 @@ body::before {
 }
 
 #sidebar-wrapper {
-    min-height: 200vh;
+    height: 100vh; /* Ajusta la altura al 100% de la ventana de visualización */
     width: 150px;
     background-color: var(--primary-color);
+    color: var(--black); /* Añadir color blanco al texto para mejor contraste */
 }
 
 #page-content-wrapper {
     width: calc(100% - 170px);
-    padding: 1px;
+    padding: var(--padding-sm);
 }
 
   /* Table styles */
@@ -133,13 +158,12 @@ body::before {
 .table td {
     vertical-align: middle;
     text-align: center;
-    padding: 1px;
+    padding: var(--padding-sm);
 }
 
 .table thead th {
     background-color: var(--primary-color);
     color: var(--white);
-    
 }
 
 .table tbody tr:nth-child(even) {
@@ -154,7 +178,7 @@ body::before {
 .img-fluid {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     box-shadow: var(--shadow);
 }
 
@@ -169,23 +193,25 @@ body::before {
   /* Media queries for responsiveness */
 @media (max-width: 768px) {
     #wrapper {
-flex-direction: column;
+        flex-direction: column;
     }
 
-    #sidebar-wrapper,
     #page-content-wrapper {
-width: 100%;
+        width: calc(100% - 150px); /* Ajusta el ancho para que tome el resto del espacio */
+        padding: var(--padding-sm);
     }
 
     .form-column {
-min-width: 100%;
+        min-width: 100%;
     }
 }
 
 .alert-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: var(--padding-base);
+    right: var(--padding-base);
     z-index: 1000;
     width: 300px;
 }
+
+

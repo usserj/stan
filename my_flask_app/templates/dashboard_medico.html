@@ -1,0 +1,41 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">{{ title }}</h1>
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Citas Programadas</h5>
+                    <p class="card-text">{{ citas_programadas }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Citas Atendidas</h5>
+                    <p class="card-text">{{ citas_atendidas }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pacientes Atendidos</h5>
+                    <p class="card-text">{{ pacientes_atendidos }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Citas Hoy</h5>
+                    <p class="card-text">{{ citas_hoy }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">{{ title }}</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Paciente</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cita in citas %}
+                <tr>
+                    <td>{{ cita.FechaCita.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ cita.FechaCita.strftime('%H:%M') }}</td>
+                    <td>{{ cita.paciente.Nombres }} {{ cita.paciente.Apellidos }}</td>
+                    <td>{{ cita.Estado }}</td>
+                    <td>
+                        <a href="{{ url_for('registrar_diagnostico', cita_id=cita.CitaID) }}" class="btn btn-primary btn-sm">Registrar Diagnóstico</a>
+                        <a href="{{ url_for('solicitar_examen', cita_id=cita.CitaID) }}" class="btn btn-secondary btn-sm">Solicitar Examen</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

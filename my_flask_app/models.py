@@ -44,8 +44,9 @@ class Usuario(db.Model, UserMixin):
 class Rol(db.Model):
     __tablename__ = 'Roles'
     RolID = db.Column(db.Integer, primary_key=True)
-    NombreRol = db.Column(db.String(20), unique=True, nullable=False)
-    Descripcion = db.Column(db.String(100), nullable=False)
+    NombreRol = db.Column(db.String(64), unique=True, nullable=False)
+    Estado = db.Column(db.String(10), nullable=False, default='activo')
+
 
 class UserRoles(db.Model):
     __tablename__ = 'UserRoles'
@@ -129,15 +130,14 @@ class Cita(db.Model):
     Duracion = db.Column(db.Integer, nullable=False, default=30)
     Estado = db.Column(db.String(20), nullable=False)
     MotivoCita = db.Column(db.String(500), nullable=False)
-    Diagnostico = db.Column(db.String(500))#se agrega dos nuevos campos para manejar el perfil de medico
-    Medicacion = db.Column(db.String(500))#se agrega dos nuevos campos para manejar el perfil de medico
     FechaRegistro = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     UsuarioRegistro = db.Column(db.Integer, nullable=False)
 
     paciente = db.relationship('Usuario', backref=db.backref('citas', lazy=True))  # Relación actualizada
     medico = db.relationship('Medico', backref=db.backref('citas', lazy=True))
     especialidad = db.relationship('Especialidad', backref=db.backref('citas', lazy=True))
-
+    diagnostico = db.relationship('Diagnostico', back_populates='cita', uselist=False)
+    examenes = db.relationship('Examen', back_populates='cita')
     
 class MedicoEspecialidad(db.Model):
     __tablename__ = 'MedicosEspecialidades'
@@ -178,6 +178,37 @@ class ConsultorioDoctor(db.Model):
     doctor = db.relationship('Medico', backref='asignaciones')
 
 
+class Diagnostico(db.Model):
+    __tablename__ = 'Diagnosticos'
+    DiagnosticoID = db.Column(db.Integer, primary_key=True)
+    CitaID = db.Column(db.Integer, db.ForeignKey('Citas.CitaID'), nullable=False)
+    Descripcion = db.Column(db.Text, nullable=False)
+    Receta = db.Column(db.Text, nullable=True)
+
+    cita = db.relationship('Cita', back_populates='diagnostico')
 
 
+class Examen(db.Model):
+    __tablename__ = 'Examenes'
+    ExamenID = db.Column(db.Integer, primary_key=True)
+    CitaID = db.Column(db.Integer, db.ForeignKey('Citas.CitaID'), nullable=False)
+    Tipo = db.Column(db.String(100), nullable=False)
+    Descripcion = db.Column(db.Text, nullable=True)
+    Estado = db.Column(db.String(20), nullable=False, default='pendiente')
+
+    cita = db.relationship('Cita', back_populates='examenes')
+
+
+
+
+
+class HistorialMedico(db.Model):
+    __tablename__ = 'HistorialMedico'
+    id = db.Column(db.Integer, primary_key=True)
+    PacienteID = db.Column(db.Integer, db.ForeignKey('Usuarios.UsuarioID'), nullable=False)
+    fecha = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    diagnostico = db.Column(db.Text, nullable=False)
+    receta = db.Column(db.Text, nullable=True)
+
+    paciente = db.relationship('Usuario', backref=db.backref('historial', lazy=True))
 

@@ -1,0 +1,18 @@
+{% extends "home.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Crear Rol</h1>
+    <form method="POST" action="{{ url_for('crear_rol') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="nombre">{{ form.nombre.label }}</label>
+            {{ form.nombre(class="form-control", id="nombre") }}
+        </div>
+        <div class="form-group">
+            <label for="estado">{{ form.estado.label }}</label>
+            {{ form.estado(class="form-control", id="estado") }}
+        </div>
+        <button type="submit" class="btn btn-success">Guardar Rol</button>
+    </form>
+</div>
+{% endblock %}

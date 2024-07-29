@@ -1,8 +1,7 @@
 {% extends "home.html" %}
-
 {% block content %}
 <div class="container mt-4">
-    <h2>Reporte de Consultorios</h2>
+    <h1 class="text-center">Reporte de Consultorios</h1>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -14,13 +13,13 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in reporte_data %}
+            {% for consultorio in reporte_data %}
             <tr>
-                <td>{{ item.consultorio }}</td>
-                <td>{{ item.doctor }}</td>
-                <td>{{ item.especialidad }}</td>
-                <td>{{ item.fecha_asignacion }}</td>
-                <td>{{ item.estado }}</td>
+                <td>{{ consultorio.consultorio }}</td>
+                <td>{{ consultorio.doctor }}</td>
+                <td>{{ consultorio.especialidad }}</td>
+                <td>{{ consultorio.fecha_asignacion }}</td>
+                <td>{{ consultorio.estado }}</td>
             </tr>
             {% endfor %}
         </tbody>

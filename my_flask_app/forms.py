@@ -41,6 +41,33 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Recuérdame')
     submit = SubmitField('Iniciar sesión')
 
+
+class EditUserForm(FlaskForm):
+    user_id = HiddenField('UserID')
+    username = StringField('NombreUsuario', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('CorreoElectronico', validators=[DataRequired(), Email()])
+    identificacion = StringField('Identificacion', validators=[DataRequired()])
+    apellidos = StringField('Apellidos', validators=[DataRequired()])
+    nombres = StringField('Nombres', validators=[DataRequired()])
+    telefono = StringField('Telefono')
+    direccion = StringField('Direccion')
+    ciudad_residencia = SelectField('CiudadResidencia', choices=[], validators=[DataRequired()])
+    fecha_nacimiento = DateField('FechaNacimiento', format='%Y-%m-%d', validators=[DataRequired()])
+    genero = SelectField('Genero', choices=[('M', 'Masculino'), ('F', 'Femenino')])
+    grupo_sanguineo = SelectField('GrupoSanguineo', choices=[], validators=[DataRequired()])
+    estado = SelectField('Estado', choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')], validators=[DataRequired()])
+    submit = SubmitField('Actualizar')
+
+    def validate_username(self, username):
+        user = Usuario.query.filter_by(NombreUsuario=username.data).first()
+        if user and user.UsuarioID != int(self.user_id.data):
+            raise ValidationError('Ese nombre de usuario ya existe. Por favor elige otro.')
+
+    def validate_email(self, email):
+        user = Usuario.query.filter_by(CorreoElectronico=email.data).first()
+        if user and user.UsuarioID != int(self.user_id.data):
+            raise ValidationError('Ese correo electrónico ya existe. Por favor elige otro.')
+
 # Asegúrate de importar el modelo Paciente
 from models import Paciente
 
@@ -55,7 +82,9 @@ class PacienteForm(FlaskForm):
     fecha_nacimiento = DateField('Fecha de Nacimiento', format='%Y-%m-%d', validators=[DataRequired()])
     genero = SelectField('Género', choices=[('M', 'Masculino'), ('F', 'Femenino')], validators=[DataRequired()])
     grupo_sanguineo = SelectField('Grupo Sanguíneo', choices=[], validators=[DataRequired()])
-    
+    estado_paciente = SelectField('Estado del Paciente', choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')], validators=[DataRequired()])
+
+
     current_password = PasswordField('Contraseña Actual', validators=[OptionalValidator()])
     password = PasswordField('Nueva Contraseña', validators=[OptionalValidator(), EqualTo('confirm_password', message='Las contraseñas deben coincidir')])
     confirm_password = PasswordField('Confirmar Nueva Contraseña', validators=[OptionalValidator()])
@@ -75,9 +104,16 @@ class MedicoForm(FlaskForm):
     especialidad = SelectField('Especialidad', choices=[])
     fecha_contratacion = DateField('Fecha de Contratación', format='%Y-%m-%d')
     estado_medico = SelectField('Estado Médico', choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')])
+    password = PasswordField('Nueva Contraseña')
+    confirm_password = PasswordField('Confirmar Nueva Contraseña', validators=[EqualTo('password', message='Las contraseñas deben coincidir')])
     submit = SubmitField('Guardar')
 
-
+    def validate_password(self, field):
+        if field.data:
+            if not self.confirm_password.data:
+                raise ValidationError('Debe confirmar la nueva contraseña.')
+        elif self.confirm_password.data:
+            raise ValidationError('Debe ingresar la nueva contraseña.')
 
 class EspecialidadForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired(), Length(max=100)])
@@ -153,3 +189,36 @@ class AsignarConsultorioForm(FlaskForm):
     fecha_asignacion = DateField('Fecha de Asignación', validators=[DataRequired()])
     submit = SubmitField('Asignar')
 
+
+class DiagnosticoForm(FlaskForm):
+    diagnostico = TextAreaField('Diagnóstico', validators=[DataRequired()])
+    receta = TextAreaField('Receta', validators=[DataRequired()])
+    submit = SubmitField('Guardar')
+
+class ExamenForm(FlaskForm):
+    tipo = SelectField('Tipo de Examen', choices=[
+        ('sangre', 'Examen de Sangre'),
+        ('orina', 'Examen de Orina'),
+        ('imagen', 'Examen de Imagen'),
+        # Añade más tipos de exámenes según sea necesario
+    ], validators=[DataRequired()])
+    descripcion = TextAreaField('Descripción', validators=[DataRequired()])
+    submit = SubmitField('Solicitar Examen')
+
+
+
+# Formulario para la búsqueda por cédula
+class CedulaSearchForm(FlaskForm):
+    cedula = StringField('Búsqueda por cédula', validators=[DataRequired()])
+    submit = SubmitField('Buscar')
+
+
+class RolForm(FlaskForm):
+    nombre = StringField('NombreRol', validators=[DataRequired(), Length(min=2, max=64)])
+    estado = SelectField('Estado', choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')], validators=[DataRequired()])
+    submit = SubmitField('Guardar Rol')
+
+    def validate_nombre(self, nombre):
+        rol = Rol.query.filter_by(NombreRol=nombre.data).first()
+        if rol and rol.NombreRol != self.nombre.data:
+            raise ValidationError('Ese nombre de rol ya existe. Por favor elige otro.')

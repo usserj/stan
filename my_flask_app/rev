@@ -1,0 +1,21 @@
+@app.route('/roles_gestionar', methods=['GET'])
+@login_required
+@role_required('Administrador')
+def roles_gestionar():
+    form = RolForm()
+    try:
+        roles = Rol.query.all()
+        print(f"Roles encontrados: {roles}")  # Línea de depuración
+        return render_template('roles_gestionar.html', title='Roles', roles=roles)
+    except Exception as e:
+        print(f"Error en la función roles: {str(e)}")
+        return render_template('error.html', error="Hubo un problema al cargar los roles.")
+
+
+
+@app.route("/roles_gestionar", methods=['GET'])
+@login_required
+@role_required('Administrador')
+def roles_gestionar():
+    users = Usuario.query.all()
+    return render_template('roles_gestionar.html', users=users)

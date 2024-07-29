@@ -1,22 +1,22 @@
 {% extends "home.html" %}
 {% block content %}
-<div class="container form-container mt-4">
-    <h1 class="form-title text-center">Asignar Consultorio</h1>
-    <form method="POST" action="{{ url_for('asignar_consultorio') }}">
+<div class="container mt-4">
+    <h1 class="text-center">Asignar Consultorio</h1>
+    <form method="POST" action="">
         {{ form.hidden_tag() }}
         <div class="form-group">
             <label for="consultorio_id">{{ form.consultorio_id.label }}</label>
-            {{ form.consultorio_id(class="form-control") }}
+            {{ form.consultorio_id(class="form-control", id="consultorio_id") }}
         </div>
         <div class="form-group">
             <label for="doctor_id">{{ form.doctor_id.label }}</label>
-            {{ form.doctor_id(class="form-control") }}
+            {{ form.doctor_id(class="form-control", id="doctor_id") }}
         </div>
         <div class="form-group">
             <label for="fecha_asignacion">{{ form.fecha_asignacion.label }}</label>
-            {{ form.fecha_asignacion(class="form-control") }}
+            {{ form.fecha_asignacion(class="form-control", id="fecha_asignacion") }}
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
     </form>
 </div>
 {% endblock %}

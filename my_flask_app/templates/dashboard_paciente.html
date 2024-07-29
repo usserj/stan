@@ -1,0 +1,37 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">{{ title }}</h1>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Citas Programadas</h5>
+                    <p class="card-text">{{ citas_programadas }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Citas Atendidas</h5>
+                    <p class="card-text">{{ citas_atendidas }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Próxima Cita</h5>
+                    {% if proxima_cita %}
+                        <p class="card-text">{{ proxima_cita.FechaCita.strftime('%d/%m/%Y %H:%M') }}</p>
+                    {% else %}
+                        <p class="card-text">No hay citas programadas</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

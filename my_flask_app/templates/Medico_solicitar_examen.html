@@ -1,0 +1,49 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container form-container mt-4">
+    <h1 class="form-title text-center">{{ title }}</h1>
+    
+    <form method="POST" action="{{ url_for('solicitar_examen', cita_id=cita.CitaID) }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="tipo">{{ form.tipo.label }}</label>
+            {{ form.tipo(class="form-control", id="tipo") }}
+        </div>
+        <div class="form-group">
+            <label for="descripcion">{{ form.descripcion.label }}</label>
+            {{ form.descripcion(class="form-control", id="descripcion") }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Solicitar Examen</button>
+    </form>
+
+    <hr>
+
+    <h2 class="text-center mt-4">Exámenes Solicitados</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tipo de Examen</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for examen in examenes %}
+                <tr>
+                    <td>{{ examen.Tipo }}</td>
+                    <td>{{ examen.Descripcion }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_examen', examen_id=examen.ExamenID) }}" class="btn btn-warning btn-sm">Modificar</a>
+                        <form action="{{ url_for('eliminar_examen', examen_id=examen.ExamenID) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

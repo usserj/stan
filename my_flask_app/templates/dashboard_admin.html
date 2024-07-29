@@ -1,0 +1,54 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Dashboard Administrador</h1>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total de Usuarios</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_usuarios }}</h5>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Total de Médicos</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_medicos }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Total de Pacientes</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_pacientes }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Total de Citas</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_citas }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Citas Hoy</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ citas_hoy }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

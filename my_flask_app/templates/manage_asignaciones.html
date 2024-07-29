@@ -2,7 +2,6 @@
 {% block content %}
 <div class="container mt-4">
     <h1 class="text-center">Gestionar Asignaciones</h1>
-    <a href="{{ url_for('asignar_consultorio') }}" class="btn btn-success mb-2">Asignar Consultorio</a>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -15,8 +14,8 @@
             {% for asignacion in asignaciones %}
             <tr>
                 <td>{{ asignacion.consultorio.nombre }}</td>
-                <td>{{ asignacion.doctor.Nombre }}</td>
-                <td>{{ asignacion.fecha_asignacion }}</td>
+                <td>{{ asignacion.doctor.Nombre }} {{ asignacion.doctor.Apellidos }}</td>
+                <td>{{ asignacion.fecha_asignacion.strftime('%Y-%m-%d') }}</td>
             </tr>
             {% endfor %}
         </tbody>
