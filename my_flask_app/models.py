@@ -13,6 +13,7 @@ user_roles = db.Table('UserRoles',
     db.Column('RolID', db.Integer, db.ForeignKey('Roles.RolID'), primary_key=True)
 )
 
+
 class Usuario(db.Model, UserMixin):
     __tablename__ = 'Usuarios'
     UsuarioID = db.Column(db.Integer, primary_key=True)
@@ -27,16 +28,17 @@ class Usuario(db.Model, UserMixin):
     Genero = db.Column(db.String(1), nullable=True)
     GrupoSanguineo = db.Column(db.String(10), nullable=True)
     NombreUsuario = db.Column(db.String(50), nullable=False, unique=True)
-    Contrasena = db.Column(db.String(100), nullable=False)
+    Contrasena = db.Column(db.String(255), nullable=False)
     FechaRegistro = db.Column(db.DateTime, nullable=True, default=db.func.current_timestamp())
     UltimoAcceso = db.Column(db.DateTime, nullable=True)
     Estado = db.Column(db.String(10), nullable=False, default='activo')
-    
-    # Relación muchos a muchos con la tabla de roles
-    roles = db.relationship('Rol', secondary=user_roles, backref=db.backref('usuarios', lazy='dynamic'))
+    EstadoPaciente = db.Column(db.String(10), nullable=True, default='activo')  # Agregar esto
+
+    roles = db.relationship('Rol', secondary='UserRoles', backref=db.backref('usuarios', lazy='dynamic'))
 
     def get_id(self):
         return self.UsuarioID
+
 
 
 class Rol(db.Model):
@@ -44,6 +46,12 @@ class Rol(db.Model):
     RolID = db.Column(db.Integer, primary_key=True)
     NombreRol = db.Column(db.String(20), unique=True, nullable=False)
     Descripcion = db.Column(db.String(100), nullable=False)
+
+class UserRoles(db.Model):
+    __tablename__ = 'UserRoles'
+    __table_args__ = {'extend_existing': True}  # Agregar esto para evitar redefiniciones
+    UsuarioID = db.Column(db.Integer, db.ForeignKey('Usuarios.UsuarioID'), primary_key=True)
+    RolID = db.Column(db.Integer, db.ForeignKey('Roles.RolID'), primary_key=True)
 
 
 
@@ -68,7 +76,7 @@ class Medico(db.Model):
     __tablename__ = 'Medicos'
     MedicoID = db.Column(db.Integer, primary_key=True)
     UsuarioID = db.Column(db.Integer, db.ForeignKey('Usuarios.UsuarioID'), nullable=False)
-    NumeroLicencia = db.Column(db.String(50), nullable=True)
+    NumeroCedula = db.Column(db.String(50), nullable=True)
     Nombre = db.Column(db.String(100), nullable=False)
     Apellidos = db.Column(db.String(100), nullable=False)
     CorreoElectronico = db.Column(db.String(100), nullable=False)
@@ -81,7 +89,10 @@ class Medico(db.Model):
     FechaContratacion = db.Column(db.Date, nullable=True)
     EstadoMedico = db.Column(db.String(10), nullable=False, default='activo')
 
-    usuario = db.relationship('Usuario', backref=db.backref('medico', uselist=False))
+    usuario = db.relationship('Usuario', backref='medico', uselist=False, foreign_keys=[UsuarioID])
+
+
+
 
 
 class Especialidad(db.Model):
@@ -104,6 +115,9 @@ class Horario(db.Model):
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     estado = db.Column(db.String(10), default='activo', nullable=False)
+
+    # Relación con el modelo Medico
+    medico = db.relationship('Medico', backref=db.backref('horarios', lazy=True))    
 
 class Cita(db.Model):
     __tablename__ = 'Citas'

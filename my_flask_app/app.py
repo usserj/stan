@@ -9,7 +9,7 @@ import tempfile
 from decorators import role_required 
 from flask import g
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from models import UserRoles
 
 
 app = Flask(__name__)
@@ -61,7 +61,7 @@ def register():
     form = RegistrationForm()
 
     # Cargar opciones de ciudades y grupo sanguíneo desde el catálogo
-    form.ciudad_residencia.choices = [(c.id, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
+    form.ciudad_residencia.choices = [(c.valor, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
     form.grupo_sanguineo.choices = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='grupo_sanguineo').all()]
     
     if form.validate_on_submit():
@@ -71,7 +71,6 @@ def register():
                 NombreUsuario=form.username.data,
                 CorreoElectronico=form.email.data,
                 Contrasena=hashed_password,
-                RolID=2,  # Ajusta el RolID para que sea el valor correcto
                 Identificacion=form.identificacion.data,
                 Apellidos=form.apellidos.data,
                 Nombres=form.nombres.data,
@@ -81,11 +80,18 @@ def register():
                 FechaNacimiento=form.fecha_nacimiento.data,
                 Genero=form.genero.data,
                 GrupoSanguineo=form.grupo_sanguineo.data,
-                Estado='activo',  # Añade el estado por defecto
-                EstadoPaciente='activo'  # Añade el estado de paciente por defecto
+                Estado='activo',
+                EstadoPaciente='activo'
             )
             db.session.add(user)
+            db.session.flush()  # Flush para obtener el ID del usuario
+
+            # Asignar el rol de paciente
+            rol_paciente = Rol.query.filter_by(NombreRol='Paciente').first()
+            user_role = UserRoles(UsuarioID=user.UsuarioID, RolID=rol_paciente.RolID)
+            db.session.add(user_role)
             db.session.commit()
+
             flash('¡Tu cuenta ha sido creada! Ahora puedes iniciar sesión', 'success')
             return redirect(url_for('login'))
         except Exception as e:
@@ -96,7 +102,6 @@ def register():
         print("Errores de validación del formulario:", form.errors)
     
     return render_template('register.html', title='Registrar', form=form)
-
 
 
 
@@ -137,7 +142,7 @@ def manage_patients():
 @login_required
 def create_patient():
     form = PacienteForm()
-    form.ciudad_residencia.choices = [(c.id, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
+    form.ciudad_residencia.choices = [(c.valor, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
     form.genero.choices = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='genero').all()]
     form.grupo_sanguineo.choices = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='grupo_sanguineo').all()]
     
@@ -184,7 +189,7 @@ def edit_patient(patient_id):
     form = PacienteForm(obj=patient)
     
     # Cargar opciones de catálogos
-    ciudades = [(c.id, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
+    ciudades = [(c.valor, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
     generos = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='genero').all()]
     grupos_sanguineos = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='grupo_sanguineo').all()]
 
@@ -232,21 +237,23 @@ def manage_doctors():
     doctors = Medico.query.all()
     return render_template('manage_doctors.html', title='Gestionar Médicos', doctors=doctors)
 
+
+
 @app.route("/doctors/create", methods=['GET', 'POST'])
 @login_required
+@role_required('Administrador')
 def create_doctor():
     form = MedicoForm()
-    form.ciudad_residencia.choices = [(c.id, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
+    form.ciudad_residencia.choices = [(c.valor, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
     form.genero.choices = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='genero').all()]
-    form.especialidad.choices = [(e.EspecialidadID, e.Nombre) for e in Especialidad.query.all()]
+    form.especialidad.choices = [(e.Nombre, e.Nombre) for e in Especialidad.query.all()]
 
     if form.validate_on_submit():
         try:
-            # Crear el usuario con campos predeterminados
             usuario = Usuario(
-                NombreUsuario=form.nombre_usuario.data,
-                Contrasena=generate_password_hash(form.password.data).decode('utf-8'),
-                Identificacion=form.numero_licencia.data,  # O cualquier identificación única
+                NombreUsuario=form.correo_electronico.data,  # Utilizar el correo electrónico como nombre de usuario
+                Contrasena=generate_password_hash('12345'),
+                Identificacion=form.numero_cedula.data,
                 Apellidos=form.apellidos.data,
                 Nombres=form.nombre.data,
                 CorreoElectronico=form.correo_electronico.data,
@@ -258,12 +265,17 @@ def create_doctor():
                 Estado='activo'
             )
             db.session.add(usuario)
-            db.session.commit()
+            db.session.flush()  # Flush para obtener el ID del usuario
+
+            # Asignar el rol de médico
+            rol_medico = Rol.query.filter_by(NombreRol='Medico').first()
+            user_role = UserRoles(UsuarioID=usuario.UsuarioID, RolID=rol_medico.RolID)
+            db.session.add(user_role)
 
             # Crear el médico
             doctor = Medico(
                 UsuarioID=usuario.UsuarioID,
-                NumeroLicencia=form.numero_licencia.data,
+                NumeroCedula=form.numero_cedula.data,
                 Nombre=form.nombre.data,
                 Apellidos=form.apellidos.data,
                 CorreoElectronico=form.correo_electronico.data,
@@ -274,25 +286,21 @@ def create_doctor():
                 Genero=form.genero.data,
                 Especialidad=form.especialidad.data,
                 FechaContratacion=form.fecha_contratacion.data,
-                EstadoMedico='activo'
+                EstadoMedico=form.estado_medico.data
             )
             db.session.add(doctor)
             db.session.commit()
-
-            # Asignar rol al usuario
-            rol_medico = Rol.query.filter_by(NombreRol='Medico').first()
-            if rol_medico:
-                usuario.roles.append(rol_medico)
-                db.session.commit()
 
             flash('El médico ha sido añadido exitosamente!', 'success')
             return redirect(url_for('manage_doctors'))
 
         except Exception as e:
             db.session.rollback()
+            print(f'Error al crear el médico: {e}')
             flash(f'Error al crear el médico: {e}', 'danger')
 
     return render_template('create_doctor.html', title='Añadir Médico', form=form)
+
 
 
 @app.route("/doctors/<int:doctor_id>/edit", methods=['GET', 'POST'])
@@ -300,14 +308,29 @@ def create_doctor():
 def edit_doctor(doctor_id):
     doctor = Medico.query.get_or_404(doctor_id)
     form = MedicoForm(obj=doctor)
+    
     # Cargar opciones de catálogos
-    CiudadResidencia = [(c.valor, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
-    Genero = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='genero').all()]
+    form.ciudad_residencia.choices = [(c.valor, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
+    form.genero.choices = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='genero').all()]
+    form.especialidad.choices = [(e.Nombre, e.Nombre) for e in Especialidad.query.all()]
 
+    # Preseleccionar los valores actuales del médico
+    if request.method == 'GET':
+        form.numero_cedula.data = doctor.NumeroCedula
+        form.nombre.data = doctor.Nombre
+        form.apellidos.data = doctor.Apellidos
+        form.correo_electronico.data = doctor.CorreoElectronico
+        form.telefono.data = doctor.Telefono
+        form.direccion.data = doctor.Direccion
+        form.ciudad_residencia.data = doctor.CiudadResidencia
+        form.fecha_nacimiento.data = doctor.FechaNacimiento
+        form.genero.data = doctor.Genero
+        form.especialidad.data = doctor.Especialidad
+        form.fecha_contratacion.data = doctor.FechaContratacion
+        form.estado_medico.data = doctor.EstadoMedico
 
     if form.validate_on_submit():
-
-        doctor.NumeroLicencia = form.numero_licencia.data
+        doctor.NumeroCedula = form.numero_cedula.data
         doctor.Nombre = form.nombre.data
         doctor.Apellidos = form.apellidos.data
         doctor.CorreoElectronico = form.correo_electronico.data
@@ -322,8 +345,8 @@ def edit_doctor(doctor_id):
         db.session.commit()
         flash('El médico ha sido actualizado!', 'success')
         return redirect(url_for('manage_doctors'))
-    return render_template('edit_doctor.html', title='Editar Médico', form=form, doctor=doctor)
 
+    return render_template('edit_doctor.html', title='Editar Médico', form=form, doctor=doctor)
 
 
 
@@ -512,15 +535,16 @@ def asignar_especialidades():
         medico_id = form.MedicoID.data
         especialidades = form.EspecialidadID.data
 
+        print(f"Medico ID: {medico_id}")
+        print(f"Especialidades: {especialidades}")
+
         # Eliminar las especialidades existentes para el médico seleccionado
         MedicoEspecialidad.query.filter_by(MedicoID=medico_id).delete()
 
-        # Añadir las nuevas especialidades seleccionadas si no existen
+        # Añadir las nuevas especialidades seleccionadas
         for especialidad_id in especialidades:
-            exists = MedicoEspecialidad.query.filter_by(MedicoID=medico_id, EspecialidadID=especialidad_id).first()
-            if not exists:
-                nueva_especialidad = MedicoEspecialidad(MedicoID=medico_id, EspecialidadID=especialidad_id)
-                db.session.add(nueva_especialidad)
+            nueva_especialidad = MedicoEspecialidad(MedicoID=medico_id, EspecialidadID=especialidad_id)
+            db.session.add(nueva_especialidad)
 
         db.session.commit()
         flash('Especialidades asignadas exitosamente!', 'success')
@@ -804,7 +828,7 @@ def manage_consultorios():
 @login_required
 def asignar_consultorio():
     form = AsignarConsultorioForm()
-    form.consultorio_id.choices = [(c.id, c.nombre) for c in Consultorio.query.all()]
+    form.consultorio_id.choices = [(c.valor, c.nombre) for c in Consultorio.query.all()]
     form.doctor_id.choices = [(d.MedicoID, f"{d.Nombre} {d.Apellidos}") for d in Medico.query.all()]
     
     if form.validate_on_submit():
@@ -863,7 +887,7 @@ def perfil_paciente():
     try:
         print("Accediendo a perfil_paciente...")
         print(f"ID del usuario actual: {current_user.UsuarioID}")
-        print(f"Rol del usuario actual: {current_user.rol.NombreRol}")
+        print(f"Roles del usuario actual: {[role.NombreRol for role in current_user.roles]}")
 
         patient = Usuario.query.filter_by(UsuarioID=current_user.UsuarioID).first()
 
@@ -874,7 +898,7 @@ def perfil_paciente():
         form = PacienteForm(obj=patient)
 
         # Cargar opciones de catálogos
-        ciudades = [(c.id, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
+        ciudades = [(c.valor, c.valor) for c in Catalogo.query.filter_by(tipo='ciudad').all()]
         generos = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='genero').all()]
         grupos_sanguineos = [(g.valor, g.valor) for g in Catalogo.query.filter_by(tipo='grupo_sanguineo').all()]
 
@@ -920,7 +944,6 @@ def perfil_paciente():
         print(f"Error en perfil_paciente: {str(e)}")
         flash('Ocurrió un error al acceder al perfil del paciente.', 'error')
         return redirect(url_for('home_page'))
-
 
 
 
@@ -983,6 +1006,7 @@ def paciente_crear_cita():
         return redirect(url_for('paciente_citas'))
     
     return render_template('paciente_crear_cita.html', title='Nueva Cita', form=form)
+
 
 
 @app.route('/paciente/citas/<int:cita_id>/editar', methods=['GET', 'POST'])

@@ -1,6 +1,6 @@
 from typing import Optional
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectMultipleField, BooleanField, DateField, SelectField, TextAreaField, TimeField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, SelectMultipleField, BooleanField, DateField, SelectField, TextAreaField, TimeField, IntegerField,HiddenField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional as OptionalValidator
 from flask_login import current_user  # Agregado
 from models import Usuario, Especialidad, Medico, user_roles, Rol  # Agregado
@@ -20,7 +20,7 @@ class RegistrationForm(FlaskForm):
     ciudad_residencia = SelectField('CiudadResidencia', choices=[], validators=[DataRequired()])
     fecha_nacimiento = DateField('FechaNacimiento', format='%Y-%m-%d', validators=[DataRequired()])
     genero = SelectField('Genero', choices=[('M', 'Masculino'), ('F', 'Femenino')])
-    grupo_sanguineo = SelectField('GrupoSanguineo', choices=[], validators=[DataRequired()])  # Asegúrate de que este campo tenga un validador
+    grupo_sanguineo = SelectField('GrupoSanguineo', choices=[], validators=[DataRequired()])
     submit = SubmitField('Registrar')
 
     def validate_username(self, username):
@@ -32,6 +32,7 @@ class RegistrationForm(FlaskForm):
         user = Usuario.query.filter_by(CorreoElectronico=email.data).first()
         if user:
             raise ValidationError('Ese correo electrónico ya existe. Por favor elige otro.')
+
 
 
 class LoginForm(FlaskForm):
@@ -62,22 +63,21 @@ class PacienteForm(FlaskForm):
     submit = SubmitField('Guardar')
 
 class MedicoForm(FlaskForm):
-    numero_licencia = StringField('Número de Licencia', validators=[Length(max=50)])
+    numero_cedula = StringField('Número de Cédula', validators=[Length(max=50)])
     nombre = StringField('Nombre', validators=[DataRequired(), Length(max=100)])
     apellidos = StringField('Apellidos', validators=[DataRequired(), Length(max=100)])
     correo_electronico = StringField('Correo Electrónico', validators=[DataRequired(), Email(), Length(max=100)])
     telefono = StringField('Teléfono', validators=[Length(max=15)])
     direccion = StringField('Dirección', validators=[Length(max=255)])
-    ciudad_residencia = SelectField('Ciudad de Residencia')
+    ciudad_residencia = SelectField('Ciudad de Residencia', choices=[], validators=[DataRequired()])
     fecha_nacimiento = DateField('Fecha de Nacimiento', format='%Y-%m-%d')
-    genero = SelectField('Género', choices=[('M', 'Masculino'), ('F', 'Femenino')])
-    especialidad = SelectField('Especialidad', validators=[DataRequired()])
+    genero = SelectField('Género', choices=[])
+    especialidad = SelectField('Especialidad', choices=[])
     fecha_contratacion = DateField('Fecha de Contratación', format='%Y-%m-%d')
-    estado_medico = StringField('Estado Médico', validators=[Length(max=10)], default='activo')
-    nombre_usuario = StringField('Nombre de Usuario', validators=[DataRequired(), Length(max=50)])
-    password = PasswordField('Contraseña', validators=[DataRequired(), Length(min=6)])
-    confirm_password = PasswordField('Confirmar Contraseña', validators=[DataRequired(), EqualTo('password')])
+    estado_medico = SelectField('Estado Médico', choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')])
     submit = SubmitField('Guardar')
+
+
 
 class EspecialidadForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired(), Length(max=100)])
@@ -117,7 +117,7 @@ class CitaForm(FlaskForm):
     MedicoID = SelectField('Médico', coerce=int, validators=[DataRequired()])
     Fecha = DateField('Fecha', format='%Y-%m-%d', validators=[DataRequired()])
     Hora = TimeField('Hora', format='%H:%M', validators=[DataRequired()])
-    Duracion = IntegerField('Duración (minutos)', validators=[DataRequired()])
+    Duracion = IntegerField('Duración (minutos)', default=60, validators=[DataRequired()])  # Valor por defecto  # Valor por defecto y oculto
     Estado = SelectField('Estado', choices=[('programada', 'Programada'), ('completada', 'Completada'), ('cancelada', 'Cancelada')], validators=[DataRequired()])
     MotivoCita = TextAreaField('Motivo de la Cita', validators=[DataRequired()])
     submit = SubmitField('Guardar')
@@ -125,12 +125,14 @@ class CitaForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(CitaForm, self).__init__(*args, **kwargs)
         if current_user.is_authenticated:
-            if current_user.rol.NombreRol == 'Paciente':
+            if 'Paciente' in [role.NombreRol for role in current_user.roles]:
                 self.PacienteID.choices = [(current_user.UsuarioID, f"{current_user.Nombres} {current_user.Apellidos}")]
             else:
                 self.PacienteID.choices = [(paciente.UsuarioID, f"{paciente.Nombres} {paciente.Apellidos}") for paciente in Usuario.query.join(user_roles).join(Rol).filter(Rol.NombreRol == 'Paciente').all()]
             self.EspecialidadID.choices = [(especialidad.EspecialidadID, especialidad.Nombre) for especialidad in Especialidad.query.all()]
             self.MedicoID.choices = [(medico.MedicoID, f"{medico.Nombre} {medico.Apellidos}") for medico in Medico.query.all()]
+
+
 
 class AsignarEspecialidadForm(FlaskForm):
     MedicoID = SelectField('Médico', coerce=int, validators=[DataRequired()])
